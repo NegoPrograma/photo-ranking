@@ -31,11 +31,8 @@ class PhotoList {
     public function choosePhotos(){
         $this->photo1 = rand(0,count($this->photoList)-1);
         $this->photo2 = rand(0,count($this->photoList)-1);
-        while($this->photo1 == $this->photo2){
-            $this->photo1 = rand(0,count($this->photoList)-1);
-            $this->photo2 = rand(0,count($this->photoList)-1);
-        }
-
+        if($this->photo1 == $this->photo2)
+            $this->choosePhotos();
     }
 }
 ?>

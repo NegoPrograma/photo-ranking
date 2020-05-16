@@ -3,10 +3,8 @@ require "./Photo.php";
 require "./PhotoList.php";
 if(isset($_FILES['photos'])){
     session_start();
-    if(!isset($_SESSION["photoList"]))
-        $_SESSION["photoList"] = new PhotoList();
-    
-        var_dump($_FILES['photos']);
+    $_SESSION["photoList"] = new PhotoList();
+    var_dump($_FILES['photos']);
     $index=0;
     foreach ($_FILES['photos']['tmp_name'] as $fileName) {
         $photo = new Photo();
