@@ -9,17 +9,24 @@ ini_set('session.gc_maxlifetime', 3600);
 session_set_cookie_params(3600);
 
 session_start(); // ready to go!
+$photo1;
+$photo2;
 $list = $_SESSION['photoList'];
 if(isset($_GET["vote"])){
     $choice = explode("/",$_POST['choice']);
     $winner = $choice[0];
     $loser = $choice[1];
     $list->assign($winner,$loser);
-
 }
-$list->choosePhotos();
-$photo1 = $list->photoList[$list->photo1];
-$photo2 = $list->photoList[$list->photo2];
+if(isset($_SESSION['photo1'])){
+    $photo1 = $_SESSION['photo1'];
+    $photo2 = $_SESSION['photo2'];
+} else {
+    $list->choosePhotos();
+    $photo1 = $list->photoList[$list->photo1];
+    $photo2 = $list->photoList[$list->photo2];
+}
+
 
 ?>
 
@@ -40,7 +47,12 @@ $photo2 = $list->photoList[$list->photo2];
     <?php echo $photo2->photoName; ?>
     <button type="submit">Escolher</button>
     </form>
-  
+    <?php
+    if(isset($_SESSION['photo1'])){
+        unset($_SESSION['photo1']);
+        unset($_SESSION['photo2']);
+    } ?>
+
 </body>
 </html>
 

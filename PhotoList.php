@@ -31,8 +31,85 @@ class PhotoList {
     public function choosePhotos(){
         $this->photo1 = rand(0,count($this->photoList)-1);
         $this->photo2 = rand(0,count($this->photoList)-1);
-        if($this->photo1 == $this->photo2)
+        if($this->photo1 == $this->photo2 || $this->isRelated($this->photoList[$this->photo1],$this->photoList[$this->photo2]))
             $this->choosePhotos();
+    }
+
+    public function assign($winnerName,$loserName){
+        $winner;
+        $loser;
+        foreach($this->photoList as $photo){
+            if($photo->photoName == $winnerName){
+                $winner = $photo;
+            }
+            else if($photo->photoName == $loserName){
+                $loser = $photo;
+            }
+        }
+        $winner->wonAgainst[] = $loser->photoName;
+        if($winner->lesserPhoto == null && $loser->lesserPhoto == null){
+            $winner->lesserPhoto = $loser;
+            $loser->upperPhoto = $winner;
+        }
+        else if($winner->lesserPhoto != null && $loser->upperPhoto == null){
+            $index = 0;
+            $aux = $winner->lesserPhoto;
+            while($aux){
+                $aux = $aux->lesserPhoto;
+                $index++;
+            }
+
+            $aux = $winner->lesserPhoto;
+            for($i = 0; $i != $index/2;$i++){
+                $aux = $aux->lesserPhoto;
+            }
+            $this->compare($aux,$loser);
+        }
+        else if($loser->upperPhoto){
+                $index = 0;
+                $aux = $loser->upperPhoto;
+                $bestOfLoserList;
+                while($aux){
+                    $bestOfLoserList = $aux;
+                    $aux = $aux->upperPhoto;
+                    $index++;
+                }
+                $aux = $bestOfLoserList;
+                for($i = 0; $i != $index/2;$i++){
+                    $aux = $aux->lesserPhoto;
+                }
+                if(!in_array($loser->photoName,$aux->wonAgainst)){
+                    $this->compare($aux,$loser);
+                }else {
+                    
+                }
+        }
+
+        $winner->points++;
+    }
+
+    private function compare($photo1, $photo2){
+        $_SESSION['photo1'] = $photo1;
+        $_SESSION['photo2'] = $photo2;
+    }
+
+
+    private function isRelated($photo1,$photo2){
+        $lesser = $photo1->lesserPhoto;
+        $upper = $photo1->upperPhoto;
+        while($lesser != null || $upper != null){
+            if($lesser->photoName == $photo2->photoName || $upper->photoName == $photo2->photoName)
+                return true;
+            else{
+                if($lesser != null){
+                    $lesser = $lesser->lesserPhoto;
+                }
+                if($upper != null){
+                    $upper = $upper->upperPhoto;
+                }
+            }                
+        }
+        return false;
     }
 }
 ?>

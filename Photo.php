@@ -9,8 +9,8 @@ class Photo{
      * @var string $photoName Contém o nome do arquivo da foto.
      * @var Photo $upperPhoto Contém o ponteiro para a foto diretamente superior que esta.
      */
-    public $upperPhoto,$lesserPhoto, $isCompared, $photoName,$photoPath;
-
+    public $upperPhoto = null, $lesserPhoto = null, $isCompared, $photoName,$photoPath, $points;
+    public $wonAgainst = array();
     
 } 
 
