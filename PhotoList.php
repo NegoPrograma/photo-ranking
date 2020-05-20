@@ -47,11 +47,13 @@ class PhotoList {
             }
         }
         $winner->wonAgainst[] = $loser->photoName;
+
+
         if($winner->lesserPhoto == null && $loser->lesserPhoto == null){
             $winner->lesserPhoto = $loser;
             $loser->upperPhoto = $winner;
         }
-        else if($winner->lesserPhoto != null && $loser->upperPhoto == null){
+        else if($winner->lesserPhoto != null){
             $index = 0;
             $aux = $winner->lesserPhoto;
             while($aux){
@@ -63,25 +65,39 @@ class PhotoList {
             for($i = 0; $i != $index/2;$i++){
                 $aux = $aux->lesserPhoto;
             }
-            $this->compare($aux,$loser);
+            if(!in_array($loser->photoName,$aux->wonAgainst)){
+                $this->compare($aux,$loser);
+            }
+            else{
+                
+            }
+            
         }
         else if($loser->upperPhoto){
                 $index = 0;
                 $aux = $loser->upperPhoto;
                 $bestOfLoserList;
                 while($aux){
-                    $bestOfLoserList = $aux;
                     $aux = $aux->upperPhoto;
+                    $bestOfLoserList = $aux;
                     $index++;
                 }
                 $aux = $bestOfLoserList;
                 for($i = 0; $i != $index/2;$i++){
                     $aux = $aux->lesserPhoto;
                 }
-                if(!in_array($loser->photoName,$aux->wonAgainst)){
+                if(!in_array($winner->photoName,$aux->wonAgainst)){
                     $this->compare($aux,$loser);
-                }else {
-                    
+                }else{
+                    if($winner->lesserPhoto == NULL){
+                        $backup = $aux->lesserPhoto;
+                        $aux->lesserPhoto = $winner;
+                        $winner->upperPhoto = $aux;
+                        $aux->lesserPhoto = $backup;
+                    }
+                    else{
+                        $backup = $aux->lesserPhoto;
+                    }
                 }
         }
 
